@@ -1,6 +1,7 @@
 with open('input', 'r') as input_file:
     data = [list(map(int, line.strip())) for line in input_file.readlines()]
 
+
 def get_stencil(map_data, x, y):
     stencil = []
     if y > 0:
@@ -12,6 +13,7 @@ def get_stencil(map_data, x, y):
     if x < len(map_data[y]) - 1:
         stencil.append((map_data[y][x + 1], x + 1, y))
     return stencil
+
 
 def find_basin(map_data, x, y):
     points_added = [(x, y)]
@@ -36,6 +38,7 @@ for y in range(len(data)):
         if all(map(lambda a: a[0] > data[y][x], get_stencil(data, x, y))):
             basins.append(find_basin(data, x, y))
 
+
 def print_map(map_data, basins):
     basin_map = [[' '] * len(row) for row in map_data]
     for basin in basins:
@@ -43,7 +46,24 @@ def print_map(map_data, basins):
             basin_map[y][x] = str(a)
 
     print('\n'.join(''.join(row) for row in basin_map))
+    print()
 
-print_map(map_data, basins)
+
+def draw_map(map_data, basins):
+    try:
+        from PIL import Image
+    except ImportError:
+        print_map(map_data, basins)
+        return
+
+    D = 0xff // 9
+    img = Image.new('L', (len(map_data[0]), len(map_data)), 0xff)
+    for basin in basins:
+        for a, x, y in basin:
+            img.putpixel((x, y), a * D)
+    img.save("map.tif")
+
+
+draw_map(data, basins)
 i, j, k = sorted(map(len, basins), reverse=True)[:3]
 print(i * j * k)
