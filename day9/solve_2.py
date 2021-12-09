@@ -25,7 +25,7 @@ def find_basin(map_data, x, y):
             for a, x_a, y_a in stencil:
                 if a == 9:
                     continue
-                if a >= map_data[y][x]:
+                if (a, x_a, y_a) not in basin:
                     basin.append((a, x_a, y_a))
                     points_added.append((x_a, y_a))
     return basin
