@@ -24,8 +24,8 @@ for (x0, y0), (x1, y1) in points:
             vent_map[y0][x] += 1
 
     else:
-        s = 1 if y0 < y1 else -1
         if x0 > x1: x0, x1, y0, y1 = x1, x0, y1, y0
+        s = 1 if y0 < y1 else -1
         for d in range(x1 - x0 + 1):
             vent_map[y0 + s * d][x0 + d] += 1
 
